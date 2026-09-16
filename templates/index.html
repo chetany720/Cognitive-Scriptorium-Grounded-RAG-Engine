@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KORTEX — Intelligent Document Retrieval & Citation Engine</title>
+  <meta name="description" content="A high-precision Retrieval-Augmented Generation (RAG) workstation providing verified, citation-grounded synthesis across domain documents.">
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Application Bar -->
+  <header class="top-bar" id="app-header">
+    <div class="brand-cluster">
+      <div class="brand-monogram">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+          <path d="M6 6h10"></path>
+          <path d="M6 10h10"></path>
+          <path d="M6 14h6"></path>
+        </svg>
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">KORTEX</h1>
+        <span class="brand-subtitle">COGNITIVE SCRIPTORIUM &amp; RAG ENGINE</span>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Badges -->
+    <div class="telemetry-deck" id="telemetry-deck">
+      <div class="telemetry-pill" title="Total indexed documents participating in retrieval">
+        <span class="pill-dot live"></span>
+        <span class="pill-label">CORPUS:</span>
+        <strong id="stat-docs-count">0 Docs</strong>
+      </div>
+      <div class="telemetry-pill" title="Total segment chunks stored in vector space">
+        <span class="pill-label">INDEX:</span>
+        <strong id="stat-chunks-count">0 Chunks</strong>
+      </div>
+      <div class="telemetry-pill" title="Unique n-gram vocabulary features">
+        <span class="pill-label">VOCAB:</span>
+        <strong id="stat-vocab-count">0 Features</strong>
+      </div>
+      <div class="telemetry-pill model-badge" id="telemetry-model-pill" title="Current synthesis engine">
+        <span class="pill-label">ENGINE:</span>
+        <strong id="stat-engine-name">KORTEX Core</strong>
+      </div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="top-actions">
+      <button class="btn btn-secondary btn-sm" id="btn-toggle-sidebar" title="Toggle Corpus Shelf">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+        <span class="btn-text">Shelf</span>
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-toggle-evidence" title="Toggle Evidence & Provenance Drawer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span class="btn-text">Evidence</span>
+        <span class="badge-count" id="evidence-count-badge">0</span>
+      </button>
+      <button class="btn btn-secondary btn-icon" id="btn-open-settings" title="Configure Engine & API Keys">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workstation Layout -->
+  <main class="workstation-container">
+    
+    <!-- LEFT PILLAR: The Corpus Shelf & Ingest Ledger -->
+    <aside class="corpus-shelf" id="corpus-shelf">
+      <div class="shelf-header">
+        <div class="shelf-title-wrap">
+          <h2 class="shelf-title">Corpus Shelf</h2>
+          <span class="shelf-caption">Active Knowledge Assets</span>
+        </div>
+        <button class="btn-text-action" id="btn-reset-sample" title="Reload default research papers">
+          Restore Curated
+        </button>
+      </div>
+
+      <!-- Ingest Dropzone -->
+      <section class="ingest-box" id="ingest-dropzone">
+        <input type="file" id="file-input" class="hidden-file-input" accept=".pdf,.txt,.md,.json,.csv" multiple>
+        <div class="dropzone-inner">
+          <svg class="dropzone-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <p class="dropzone-lead">Drop research files here</p>
+          <span class="dropzone-hint">PDF, Markdown, Text (Max 32MB)</span>
+          <button type="button" class="btn btn-xs btn-outline" id="btn-browse-file">Browse File</button>
+        </div>
+        <div class="upload-progress-bar" id="upload-progress">
+          <div class="progress-fill" id="upload-progress-fill"></div>
+        </div>
+      </section>
+
+      <!-- Document Ledger Inventory -->
+      <section class="documents-ledger">
+        <div class="ledger-meta-bar">
+          <span class="ledger-label">INDEXED ASSETS</span>
+          <span class="ledger-count" id="active-ratio-label">0/0 Active</span>
+        </div>
+
+        <div class="document-list" id="document-list">
+          <!-- Dynamically populated document cards -->
+          <div class="empty-shelf-state" id="empty-shelf-state">
+            <p>No documents indexed yet.</p>
+            <span>Upload or click "Restore Curated" to load papers.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hyperparameter Snapshot -->
+      <div class="shelf-footer-telemetry">
+        <div class="param-row">
+          <span>Retrieval Top-K:</span>
+          <strong id="param-topk-display">4 chunks</strong>
+        </div>
+        <div class="param-row">
+          <span>Threshold:</span>
+          <strong id="param-threshold-display">0.10</strong>
+        </div>
+        <div class="param-row">
+          <span>Mode:</span>
+          <strong class="mode-highlight">Dense + BM25 Hybrid</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER PILLAR: The Dialogue & Synthesis Chamber -->
+    <section class="synthesis-chamber" id="synthesis-chamber">
+      
+      <!-- Dialogue Feed -->
+      <div class="dialogue-scroll-area" id="dialogue-scroll-area">
+        
+        <!-- Welcome Hero (Displayed when conversation is empty) -->
+        <div class="scriptorium-welcome" id="scriptorium-welcome">
+          <div class="welcome-stamp">
+            <span class="stamp-code">RAG ARCHIVE v2.4</span>
+          </div>
+          <h2 class="welcome-headline">The Research Scriptorium</h2>
+          <p class="welcome-narrative">
+            An exacting retrieval and synthesis workspace. Submit complex domain inquiries against your indexed knowledge corpus. Every statement is attributed with verifiable citation tags linking to source passages.
+          </p>
+
+          <!-- Curated Suggestion Chips -->
+          <div class="inquiry-suggestions-section">
+            <h3 class="suggestions-label">CURATED RESEARCH INQUIRIES</h3>
+            <div class="suggestion-chips-grid">
+              <button class="suggestion-chip" data-query="How does Multi-Query Attention differ from Grouped-Query Attention in mitigating KV-cache memory bottlenecks?">
+                <span class="chip-index">01</span>
+                <span class="chip-text">How does MQA differ from GQA in mitigating KV-cache bottlenecks?</span>
+              </button>
+              <button class="suggestion-chip" data-query="What causes the lost-in-the-middle phenomenon in long context retrieval, and what techniques mitigate it?">
+                <span class="chip-index">02</span>
+                <span class="chip-text">What causes the lost-in-the-middle phenomenon and how is it mitigated?</span>
+              </button>
+              <button class="suggestion-chip" data-query="Explain the ReAct cognitive cycle and how episodic memory is partitioned in autonomous agent systems.">
+                <span class="chip-index">03</span>
+                <span class="chip-text">Explain the ReAct cognitive cycle and episodic memory in agent architectures.</span>
+              </button>
+              <button class="suggestion-chip" data-query="What is the optimal chunking granularity and sliding window overlap ratio for production RAG systems?">
+                <span class="chip-index">04</span>
+                <span class="chip-text">What is the optimal chunking token size and sliding overlap ratio for RAG?</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Message History -->
+        <div class="conversation-thread" id="conversation-thread"></div>
+
+        <!-- Synthesis Loading Skeleton -->
+        <div class="synthesis-loader" id="synthesis-loader">
+          <div class="loader-banner">
+            <div class="loader-spinner"></div>
+            <div class="loader-text-group">
+              <span class="loader-primary">Executing Hybrid Vector Retrieval &amp; Semantic Synthesis</span>
+              <span class="loader-sub">Computing cosine distances across active corpus chunks...</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Query Input Bar -->
+      <footer class="query-dock">
+        <form class="query-form" id="query-form">
+          <div class="query-input-shell">
+            <textarea 
+              id="query-input" 
+              class="query-input" 
+              placeholder="Inquire against active corpus (e.g., 'What is the attention equation and why is scaling applied?')..." 
+              rows="1"
+              required
+            ></textarea>
+            
+            <div class="query-form-actions">
+              <div class="dock-status-indicator">
+                <span class="status-indicator-dot"></span>
+                <span class="status-indicator-text" id="dock-active-docs-text">Ready · 3 Documents Active</span>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-submit" id="btn-submit-query" title="Submit Inquiry (Enter)">
+                <span class="submit-text">Synthesize</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="query-hints-bar">
+            <span>Press <kbd>Enter</kbd> to synthesize, <kbd>Shift + Enter</kbd> for line break</span>
+            <span class="corpus-scope-label">Strict Grounding Enabled</span>
+          </div>
+        </form>
+      </footer>
+
+    </section>
+
+    <!-- RIGHT PILLAR: Evidence & Provenance Inspector Drawer -->
+    <aside class="evidence-inspector" id="evidence-inspector">
+      <div class="inspector-header">
+        <div class="inspector-title-wrap">
+          <h2 class="inspector-title">Evidence &amp; Provenance</h2>
+          <span class="inspector-subtitle">Retrieved Context Chunks</span>
+        </div>
+        <button class="btn-icon-close" id="btn-close-evidence" title="Close Drawer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="inspector-body" id="evidence-body">
+        <div class="inspector-empty" id="evidence-empty-state">
+          <div class="empty-icon-shield">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <p class="empty-lead">No Evidence Chunks Selected</p>
+          <span class="empty-sub">Submit an inquiry or click any citation badge [1] in the dialogue stream to inspect verbatim source passages and match scores.</span>
+        </div>
+
+        <div class="evidence-chunks-feed" id="evidence-chunks-feed">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- SETTINGS MODAL DIALOG -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal-card" role="dialog" aria-labelledby="settings-heading">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 class="modal-title" id="settings-heading">RAG Engine &amp; Synthesis Configuration</h2>
+          <span class="modal-caption">Fine-tune vector retrieval thresholds and frontier generation providers.</span>
+        </div>
+        <button class="btn-icon-close" id="btn-close-settings" title="Close Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <form class="modal-form" id="settings-form">
+        <!-- Provider Selection -->
+        <div class="form-group">
+          <label class="form-label" for="setting-provider">Synthesis Provider</label>
+          <select id="setting-provider" class="form-select">
+            <option value="builtin">KORTEX Core (Local Deterministic Grounding · No API Key Required)</option>
+            <option value="gemini">Google Gemini (Requires GEMINI_API_KEY)</option>
+            <option value="openai">OpenAI (Requires OPENAI_API_KEY)</option>
+            <option value="groq">Groq High-Speed (Requires GROQ_API_KEY)</option>
+          </select>
+          <span class="form-help">The local KORTEX engine synthesizes responses directly from retrieved chunk vectors without external API calls.</span>
+        </div>
+
+        <!-- API Key -->
+        <div class="form-group" id="api-key-group">
+          <label class="form-label" for="setting-api-key">API Key</label>
+          <div class="input-with-action">
+            <input type="password" id="setting-api-key" class="form-input" placeholder="Paste your API key here...">
+            <button type="button" class="btn-input-reveal" id="btn-toggle-key-visibility">Show</button>
+          </div>
+          <span class="form-help">Stored locally in session memory. Never persisted to external logs.</span>
+        </div>
+
+        <!-- Model Selection -->
+        <div class="form-group" id="model-select-group">
+          <label class="form-label" for="setting-model">Model Identifier</label>
+          <input type="text" id="setting-model" class="form-input" placeholder="auto (or e.g. gemini-1.5-flash, gpt-4o-mini)">
+        </div>
+
+        <!-- Hyperparameters -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <div class="label-with-val">
+              <label class="form-label" for="setting-topk">Retrieval Top-K</label>
+              <span class="val-display" id="val-topk-display">4</span>
+            </div>
+            <input type="range" id="setting-topk" min="1" max="10" step="1" value="4" class="form-range">
+            <span class="form-help">Number of candidate chunks fetched.</span>
+          </div>
+
+          <div class="form-group">
+            <div class="label-with-val">
+              <label class="form-label" for="setting-threshold">Similarity Threshold</label>
+              <span class="val-display" id="val-threshold-display">0.10</span>
+            </div>
+            <input type="range" id="setting-threshold" min="0.02" max="0.50" step="0.02" value="0.10" class="form-range">
+            <span class="form-help">Minimum relevance cut-off score.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-with-val">
+            <label class="form-label" for="setting-temp">Synthesis Temperature</label>
+            <span class="val-display" id="val-temp-display">0.2</span>
+          </div>
+          <input type="range" id="setting-temp" min="0.0" max="1.0" step="0.05" value="0.2" class="form-range">
+          <span class="form-help">Lower values produce stricter, more deterministic factual grounding.</span>
+        </div>
+
+        <div class="modal-footer">
+          <span class="status-msg" id="settings-status-msg"></span>
+          <button type="submit" class="btn btn-primary" id="btn-save-settings">Apply Configuration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application Logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
